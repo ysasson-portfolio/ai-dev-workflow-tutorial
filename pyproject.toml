@@ -1,0 +1,16 @@
+[project]
+name = "ai-dev-workflow-tutorial"
+version = "0.1.0"
+description = "ShopSmart Sales Analytics Dashboard"
+requires-python = ">=3.12"
+dependencies = [
+    "pandas>=2.3.3",
+    "plotly>=6.6.0",
+    "pytest>=9.0.2",
+    "sqlalchemy>=2.0.48",
+    "streamlit>=1.55.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"
