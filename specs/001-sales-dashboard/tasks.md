@@ -80,19 +80,19 @@ and Monthly; confirm chart updates with correct number of data points for each.
 
 ### Tests for User Story 2 (TDD — write first, confirm FAIL before implementing)
 
-- [ ] T019 [P] [US2] Write test `test_aggregate_by_time_monthly` in `tests/test_data.py`: assert output has one row per calendar month with correct `period` and `total_sales` values
-- [ ] T020 [P] [US2] Write test `test_aggregate_by_time_daily` in `tests/test_data.py`: assert output has one row per unique date, sorted ascending
-- [ ] T021 [P] [US2] Write test `test_aggregate_by_time_invalid_granularity` in `tests/test_data.py`: assert `ValueError` raised for unknown granularity string
-- [ ] T022 [P] [US2] Write test `test_build_trend_chart_returns_chart` in `tests/test_charts.py`: assert non-None return from valid time-series DataFrame
-- [ ] T023 [P] [US2] Write test `test_build_trend_chart_empty_dataframe` in `tests/test_charts.py`: assert function returns without error when DataFrame is empty
-- [ ] T024 [US2] Confirm T019–T023 FAIL: run `uv run pytest tests/test_data.py tests/test_charts.py -v` and verify all five tests show FAILED
+- [x] T019 [P] [US2] Write test `test_aggregate_by_time_monthly` in `tests/test_data.py`: assert output has one row per calendar month with correct `period` and `total_sales` values
+- [x] T020 [P] [US2] Write test `test_aggregate_by_time_daily` in `tests/test_data.py`: assert output has one row per unique date, sorted ascending
+- [x] T021 [P] [US2] Write test `test_aggregate_by_time_invalid_granularity` in `tests/test_data.py`: assert `ValueError` raised for unknown granularity string
+- [x] T022 [P] [US2] Write test `test_build_trend_chart_returns_chart` in `tests/test_charts.py`: assert non-None return from valid time-series DataFrame
+- [x] T023 [P] [US2] Write test `test_build_trend_chart_empty_dataframe` in `tests/test_charts.py`: assert function returns without error when DataFrame is empty
+- [x] T024 [US2] Confirm T019–T023 FAIL: run `uv run pytest tests/test_data.py tests/test_charts.py -v` and verify all five tests show FAILED
 
 ### Implementation for User Story 2
 
-- [ ] T025 [US2] Implement `aggregate_by_time()` in `data.py`: group by month-start (Monthly) or date (Daily), sum `total_amount`, sort ascending by `period`, return DataFrame with columns `["period", "total_sales"]`
-- [ ] T026 [US2] Implement `build_trend_chart()` in `charts.py`: use `st.line_chart`-compatible DataFrame; fall back to Plotly only if axis labelling requires it (document reason in `app.py` call site comment)
-- [ ] T027 [US2] Add trend chart section to `app.py`: `st.radio` granularity toggle (options: `["Monthly", "Daily"]`, default `"Monthly"`), call `aggregate_by_time()` and `build_trend_chart()`, render chart with `st.line_chart` or `st.plotly_chart`
-- [ ] T028 [US2] Confirm T019–T023 PASS: run `uv run pytest tests/test_data.py tests/test_charts.py -v`
+- [x] T025 [US2] Implement `aggregate_by_time()` in `data.py`: group by month-start (Monthly) or date (Daily), sum `total_amount`, sort ascending by `period`, return DataFrame with columns `["period", "total_sales"]`
+- [x] T026 [US2] Implement `build_trend_chart()` in `charts.py`: use `st.line_chart`-compatible DataFrame; fall back to Plotly only if axis labelling requires it (document reason in `app.py` call site comment)
+- [x] T027 [US2] Add trend chart section to `app.py`: `st.radio` granularity toggle (options: `["Monthly", "Daily"]`, default `"Monthly"`), call `aggregate_by_time()` and `build_trend_chart()`, render chart with `st.line_chart` or `st.plotly_chart`
+- [x] T028 [US2] Confirm T019–T023 PASS: run `uv run pytest tests/test_data.py tests/test_charts.py -v`
 
 **Checkpoint**: US2 complete — trend chart independently functional and tested
 

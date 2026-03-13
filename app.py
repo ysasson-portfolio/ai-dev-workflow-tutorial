@@ -62,7 +62,12 @@ _col4.metric("Top Category", _kpis["top_category"])
 # ---------------------------------------------------------------------------
 # Sales trend chart  (US2)
 # ---------------------------------------------------------------------------
-# TODO T027: granularity radio + aggregate_by_time() + build_trend_chart()
+st.subheader("Sales Trend")
+# Using st.plotly_chart: build_trend_chart() returns a Plotly Figure because
+# st.line_chart does not support custom y-axis labels ("Sales ($)") natively.
+_granularity = st.radio("Granularity", ["Monthly", "Daily"], horizontal=True)
+_trend_df = data.aggregate_by_time(_filtered_df, _granularity)
+st.plotly_chart(charts.build_trend_chart(_trend_df), use_container_width=True)
 
 
 # ---------------------------------------------------------------------------

@@ -9,6 +9,7 @@ See specs/001-sales-dashboard/contracts/charts-interface.md for full contracts.
 from __future__ import annotations
 
 import pandas as pd
+import plotly.graph_objects as go
 
 
 def build_trend_chart(df: pd.DataFrame):
@@ -27,7 +28,22 @@ def build_trend_chart(df: pd.DataFrame):
         for use with st.line_chart(). Returns an empty DataFrame
         (not an error) when input is empty.
     """
-    raise NotImplementedError
+    # Using Plotly instead of st.line_chart: st.line_chart does not support
+    # custom y-axis labels ("Sales ($)") or rich tooltip formatting natively.
+    fig = go.Figure()
+    if not df.empty:
+        fig.add_trace(go.Scatter(
+            x=df["period"],
+            y=df["total_sales"],
+            mode="lines+markers",
+            hovertemplate="%{x}<br>Sales: $%{y:,.2f}<extra></extra>",
+        ))
+    fig.update_layout(
+        xaxis_title="Period",
+        yaxis_title="Sales ($)",
+        margin=dict(l=0, r=0, t=30, b=0),
+    )
+    return fig
 
 
 def build_bar_chart(

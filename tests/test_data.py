@@ -8,6 +8,12 @@ US2: aggregate_by_time                            (T019-T021)
 US3: aggregate_by_column                          (T029-T031)
 US4: filter_data                                  (T039-T044)
 """
+# clean_df monthly breakdown (from conftest):
+#   Jan 2024: 99.98 + 19.99 = 119.97
+#   Feb 2024: 239.97 + 199.99 = 439.96
+#   Mar 2024: 79.98 + 119.96 = 199.94
+#   Apr 2024: 89.99 + 99.98 = 189.97
+#   May 2024: 399.99
 from datetime import date
 
 import pandas as pd
@@ -60,3 +66,34 @@ def test_compute_kpis_empty_dataframe():
     assert kpis["total_orders"] == 0
     assert kpis["avg_order_value"] == 0.0
     assert kpis["top_category"] == "—"
+
+
+# ---------------------------------------------------------------------------
+# US2 - Sales Trend Over Time (T019-T021)
+# ---------------------------------------------------------------------------
+
+def test_aggregate_by_time_monthly(clean_df):
+    """T019: aggregate_by_time() Monthly returns one row per calendar month."""
+    result = data.aggregate_by_time(clean_df, "Monthly")
+    assert list(result.columns) == ["period", "total_sales"]
+    assert len(result) == 5  # Jan–May 2024
+    periods = list(result["period"])
+    assert periods == sorted(periods)  # ascending
+    assert result.iloc[0]["period"] == date(2024, 1, 1)
+    assert result.iloc[0]["total_sales"] == pytest.approx(119.97, rel=1e-3)
+    assert result.iloc[1]["total_sales"] == pytest.approx(439.96, rel=1e-3)
+
+
+def test_aggregate_by_time_daily(clean_df):
+    """T020: aggregate_by_time() Daily returns one row per unique date, sorted ascending."""
+    result = data.aggregate_by_time(clean_df, "Daily")
+    assert list(result.columns) == ["period", "total_sales"]
+    assert len(result) == 9  # 9 unique dates in clean_df
+    periods = list(result["period"])
+    assert periods == sorted(periods)  # ascending
+
+
+def test_aggregate_by_time_invalid_granularity(clean_df):
+    """T021: aggregate_by_time() raises ValueError for unknown granularity."""
+    with pytest.raises(ValueError):
+        data.aggregate_by_time(clean_df, "Weekly")

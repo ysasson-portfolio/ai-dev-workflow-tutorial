@@ -144,7 +144,25 @@ def aggregate_by_time(df: pd.DataFrame, granularity: str) -> pd.DataFrame:
     Raises:
         ValueError: If granularity is not "Monthly" or "Daily".
     """
-    raise NotImplementedError
+    if granularity not in ("Monthly", "Daily"):
+        raise ValueError(f"granularity must be 'Monthly' or 'Daily', got {granularity!r}")
+
+    df = df.copy()
+    df["date"] = pd.to_datetime(df["date"])
+
+    if granularity == "Monthly":
+        df["period"] = df["date"].dt.to_period("M").dt.to_timestamp().dt.date
+    else:
+        df["period"] = df["date"].dt.date
+
+    result = (
+        df.groupby("period", as_index=False)["total_amount"]
+        .sum()
+        .rename(columns={"total_amount": "total_sales"})
+        .sort_values("period")
+        .reset_index(drop=True)
+    )
+    return result[["period", "total_sales"]]
 
 
 def aggregate_by_column(df: pd.DataFrame, column: str) -> pd.DataFrame:
