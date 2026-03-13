@@ -97,3 +97,32 @@ def test_aggregate_by_time_invalid_granularity(clean_df):
     """T021: aggregate_by_time() raises ValueError for unknown granularity."""
     with pytest.raises(ValueError):
         data.aggregate_by_time(clean_df, "Weekly")
+
+
+# ---------------------------------------------------------------------------
+# US3 - Sales by Category and Region (T029-T031)
+# ---------------------------------------------------------------------------
+
+def test_aggregate_by_column_category_sorted(clean_df):
+    """T029: aggregate_by_column() category returns rows sorted descending by total_sales."""
+    result = data.aggregate_by_column(clean_df, "category")
+    assert list(result.columns) == ["label", "total_sales"]
+    sales = list(result["total_sales"])
+    assert sales == sorted(sales, reverse=True)
+    # clean_df has categories: Audio, Accessories, Wearables, Electronics
+    assert set(result["label"]) == {"Audio", "Accessories", "Wearables", "Electronics"}
+
+
+def test_aggregate_by_column_region_sorted(clean_df):
+    """T030: aggregate_by_column() region returns rows sorted descending by total_sales."""
+    result = data.aggregate_by_column(clean_df, "region")
+    assert list(result.columns) == ["label", "total_sales"]
+    sales = list(result["total_sales"])
+    assert sales == sorted(sales, reverse=True)
+    assert set(result["label"]) == {"North", "South", "East", "West"}
+
+
+def test_aggregate_by_column_invalid_column(clean_df):
+    """T031: aggregate_by_column() raises ValueError for unsupported column name."""
+    with pytest.raises(ValueError):
+        data.aggregate_by_column(clean_df, "product")

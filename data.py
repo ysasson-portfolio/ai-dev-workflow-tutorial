@@ -179,4 +179,13 @@ def aggregate_by_column(df: pd.DataFrame, column: str) -> pd.DataFrame:
     Raises:
         ValueError: If column is not "category" or "region".
     """
-    raise NotImplementedError
+    if column not in ("category", "region"):
+        raise ValueError(f"column must be 'category' or 'region', got {column!r}")
+    result = (
+        df.groupby(column, as_index=False)["total_amount"]
+        .sum()
+        .rename(columns={column: "label", "total_amount": "total_sales"})
+        .sort_values("total_sales", ascending=False)
+        .reset_index(drop=True)
+    )
+    return result[["label", "total_sales"]]

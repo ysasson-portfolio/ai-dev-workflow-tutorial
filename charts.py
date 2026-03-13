@@ -70,4 +70,19 @@ def build_bar_chart(
         A Streamlit-compatible chart object, or a chart-ready DataFrame.
         Returns an empty DataFrame (not an error) when input is empty.
     """
-    raise NotImplementedError
+    # Using Plotly instead of st.bar_chart: st.bar_chart sorts bars alphabetically
+    # and does not preserve the descending-by-value order from aggregate_by_column().
+    fig = go.Figure()
+    if not df.empty:
+        fig.add_trace(go.Bar(
+            x=df[label_col],
+            y=df[value_col],
+            hovertemplate="%{x}<br>Sales: $%{y:,.2f}<extra></extra>",
+        ))
+    fig.update_layout(
+        title=title,
+        xaxis_title=label_col.capitalize(),
+        yaxis_title="Sales ($)",
+        margin=dict(l=0, r=0, t=40, b=0),
+    )
+    return fig

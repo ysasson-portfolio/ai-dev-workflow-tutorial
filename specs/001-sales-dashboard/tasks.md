@@ -108,19 +108,19 @@ lowest; hover tooltip shows segment name and exact value.
 
 ### Tests for User Story 3 (TDD — write first, confirm FAIL before implementing)
 
-- [ ] T029 [P] [US3] Write test `test_aggregate_by_column_category_sorted` in `tests/test_data.py`: assert output is sorted descending by `total_sales` and `label` column contains category values
-- [ ] T030 [P] [US3] Write test `test_aggregate_by_column_region_sorted` in `tests/test_data.py`: assert output is sorted descending and `label` column contains region values
-- [ ] T031 [P] [US3] Write test `test_aggregate_by_column_invalid_column` in `tests/test_data.py`: assert `ValueError` raised for column name not in `["category", "region"]`
-- [ ] T032 [P] [US3] Write test `test_build_bar_chart_returns_chart` in `tests/test_charts.py`: assert non-None return from valid segment DataFrame
-- [ ] T033 [P] [US3] Write test `test_build_bar_chart_empty_dataframe` in `tests/test_charts.py`: assert function returns without error when DataFrame is empty
-- [ ] T034 [US3] Confirm T029–T033 FAIL: run `uv run pytest tests/test_data.py tests/test_charts.py -v` and verify all five tests show FAILED
+- [x] T029 [P] [US3] Write test `test_aggregate_by_column_category_sorted` in `tests/test_data.py`: assert output is sorted descending by `total_sales` and `label` column contains category values
+- [x] T030 [P] [US3] Write test `test_aggregate_by_column_region_sorted` in `tests/test_data.py`: assert output is sorted descending and `label` column contains region values
+- [x] T031 [P] [US3] Write test `test_aggregate_by_column_invalid_column` in `tests/test_data.py`: assert `ValueError` raised for column name not in `["category", "region"]`
+- [x] T032 [P] [US3] Write test `test_build_bar_chart_returns_chart` in `tests/test_charts.py`: assert non-None return from valid segment DataFrame
+- [x] T033 [P] [US3] Write test `test_build_bar_chart_empty_dataframe` in `tests/test_charts.py`: assert function returns without error when DataFrame is empty
+- [x] T034 [US3] Confirm T029–T033 FAIL: run `uv run pytest tests/test_data.py tests/test_charts.py -v` and verify all five tests show FAILED
 
 ### Implementation for User Story 3
 
-- [ ] T035 [US3] Implement `aggregate_by_column()` in `data.py`: group by `category` or `region`, sum `total_amount`, rename columns to `["label", "total_sales"]`, sort descending
-- [ ] T036 [US3] Implement `build_bar_chart()` in `charts.py`: use `st.bar_chart`-compatible DataFrame; fall back to Plotly only if descending-sort display requires it (document reason in `app.py` call site comment)
-- [ ] T037 [US3] Add category and region bar charts to `app.py` in a two-column layout using `st.columns(2)`: call `aggregate_by_column()` and `build_bar_chart()` for each segment
-- [ ] T038 [US3] Confirm T029–T033 PASS; run full dashboard locally (`uv run streamlit run app.py`) and validate MVP: all four KPIs, trend chart, and both bar charts visible and correct
+- [x] T035 [US3] Implement `aggregate_by_column()` in `data.py`: group by `category` or `region`, sum `total_amount`, rename columns to `["label", "total_sales"]`, sort descending
+- [x] T036 [US3] Implement `build_bar_chart()` in `charts.py`: use `st.bar_chart`-compatible DataFrame; fall back to Plotly only if descending-sort display requires it (document reason in `app.py` call site comment)
+- [x] T037 [US3] Add category and region bar charts to `app.py` in a two-column layout using `st.columns(2)`: call `aggregate_by_column()` and `build_bar_chart()` for each segment
+- [x] T038 [US3] Confirm T029–T033 PASS; run full dashboard locally (`uv run streamlit run app.py`) and validate MVP: all four KPIs, trend chart, and both bar charts visible and correct
 
 **Checkpoint**: MVP complete — US1 + US2 + US3 fully functional and independently testable
 

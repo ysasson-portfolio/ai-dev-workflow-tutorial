@@ -73,4 +73,19 @@ st.plotly_chart(charts.build_trend_chart(_trend_df), use_container_width=True)
 # ---------------------------------------------------------------------------
 # Category and region bar charts  (US3)
 # ---------------------------------------------------------------------------
-# TODO T037: two-column layout with aggregate_by_column() + build_bar_chart()
+# Using st.plotly_chart: build_bar_chart() returns Plotly Figures because
+# st.bar_chart sorts bars alphabetically, losing the descending-by-value order.
+st.subheader("Sales by Segment")
+_col_cat, _col_reg = st.columns(2)
+with _col_cat:
+    _cat_df = data.aggregate_by_column(_filtered_df, "category")
+    st.plotly_chart(
+        charts.build_bar_chart(_cat_df, "label", "total_sales", "Sales by Category"),
+        use_container_width=True,
+    )
+with _col_reg:
+    _reg_df = data.aggregate_by_column(_filtered_df, "region")
+    st.plotly_chart(
+        charts.build_bar_chart(_reg_df, "label", "total_sales", "Sales by Region"),
+        use_container_width=True,
+    )

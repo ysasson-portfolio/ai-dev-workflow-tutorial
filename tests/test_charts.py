@@ -29,3 +29,21 @@ def test_build_trend_chart_empty_dataframe():
     empty_df = pd.DataFrame(columns=["period", "total_sales"])
     chart = charts.build_trend_chart(empty_df)
     assert chart is not None
+
+
+# ---------------------------------------------------------------------------
+# US3 - Bar Charts (T032-T033)
+# ---------------------------------------------------------------------------
+
+def test_build_bar_chart_returns_chart(clean_df):
+    """T032: build_bar_chart() returns a non-None chart object from valid data."""
+    bar_df = data.aggregate_by_column(clean_df, "category")
+    chart = charts.build_bar_chart(bar_df, "label", "total_sales", "Sales by Category")
+    assert chart is not None
+
+
+def test_build_bar_chart_empty_dataframe():
+    """T033: build_bar_chart() returns without error when DataFrame is empty."""
+    empty_df = pd.DataFrame(columns=["label", "total_sales"])
+    chart = charts.build_bar_chart(empty_df, "label", "total_sales", "Sales by Category")
+    assert chart is not None
