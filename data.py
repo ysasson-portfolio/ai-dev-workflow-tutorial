@@ -30,7 +30,21 @@ def load_data(use_database: bool, connection_url: str | None) -> pd.DataFrame:
         ValueError: use_database=True but connection_url is None.
         ConnectionError: Database connection failed.
     """
-    raise NotImplementedError
+    if use_database:
+        if connection_url is None:
+            raise ValueError("connection_url is required when use_database=True")
+        try:
+            from sqlalchemy import create_engine, text
+            engine = create_engine(connection_url)
+            with engine.connect() as conn:
+                return pd.read_sql(text("SELECT * FROM transactions"), conn)
+        except Exception as exc:
+            raise ConnectionError(f"Database connection failed: {exc}") from exc
+
+    csv_path = os.path.join(os.path.dirname(__file__), "data", "sales-data.csv")
+    if not os.path.exists(csv_path):
+        raise FileNotFoundError(f"CSV file not found: {csv_path}")
+    return pd.read_csv(csv_path)
 
 
 def clean_data(df: pd.DataFrame) -> tuple[pd.DataFrame, int]:
@@ -45,7 +59,20 @@ def clean_data(df: pd.DataFrame) -> tuple[pd.DataFrame, int]:
     Returns:
         Tuple of (cleaned DataFrame, count of excluded rows).
     """
-    raise NotImplementedError
+    original_len = len(df)
+    df = df.copy()
+    df["date"] = pd.to_datetime(df["date"], errors="coerce")
+    mask = (
+        df["total_amount"].notna()
+        & df["category"].notna()
+        & df["region"].notna()
+        & (df["total_amount"] >= 0)
+        & df["date"].notna()
+    )
+    cleaned = df[mask].copy()
+    cleaned["date"] = cleaned["date"].dt.date
+    excluded_count = original_len - len(cleaned)
+    return cleaned, excluded_count
 
 
 def filter_data(
@@ -84,7 +111,23 @@ def compute_kpis(df: pd.DataFrame) -> dict:
         avg_order_value (float), top_category (str).
         Returns zero/empty-safe values when df is empty.
     """
-    raise NotImplementedError
+    if df.empty:
+        return {
+            "total_sales": 0.0,
+            "total_orders": 0,
+            "avg_order_value": 0.0,
+            "top_category": "—",
+        }
+    total_sales = float(df["total_amount"].sum())
+    total_orders = int(df["order_id"].nunique())
+    avg_order_value = total_sales / total_orders if total_orders > 0 else 0.0
+    top_category = df.groupby("category")["total_amount"].sum().idxmax()
+    return {
+        "total_sales": total_sales,
+        "total_orders": total_orders,
+        "avg_order_value": avg_order_value,
+        "top_category": top_category,
+    }
 
 
 def aggregate_by_time(df: pd.DataFrame, granularity: str) -> pd.DataFrame:

@@ -53,18 +53,18 @@ values match manual CSV calculations (Total Sales ≈ $650K–$700K, Total Order
 
 ### Tests for User Story 1 (TDD — write first, confirm FAIL before implementing)
 
-- [ ] T010 [P] [US1] Write test `test_load_data_csv_returns_correct_shape` in `tests/test_data.py`: assert DataFrame has 8 expected columns and row count > 0
-- [ ] T011 [P] [US1] Write test `test_clean_data_removes_null_rows` in `tests/test_data.py`: inject rows with null `total_amount`/`category`/`region`; assert excluded_count matches injected nulls
-- [ ] T012 [P] [US1] Write test `test_compute_kpis_correct_values` in `tests/test_data.py`: use conftest fixture; assert `total_sales`, `total_orders`, `avg_order_value`, `top_category` match expected values
-- [ ] T013 [US1] Confirm T010–T012 FAIL: run `uv run pytest tests/test_data.py -v` and verify all three tests show FAILED before proceeding
+- [x] T010 [P] [US1] Write test `test_load_data_csv_returns_correct_shape` in `tests/test_data.py`: assert DataFrame has 8 expected columns and row count > 0
+- [x] T011 [P] [US1] Write test `test_clean_data_removes_null_rows` in `tests/test_data.py`: inject rows with null `total_amount`/`category`/`region`; assert excluded_count matches injected nulls
+- [x] T012 [P] [US1] Write test `test_compute_kpis_correct_values` in `tests/test_data.py`: use conftest fixture; assert `total_sales`, `total_orders`, `avg_order_value`, `top_category` match expected values
+- [x] T013 [US1] Confirm T010–T012 FAIL: run `uv run pytest tests/test_data.py -v` and verify all three tests show FAILED before proceeding
 
 ### Implementation for User Story 1
 
-- [ ] T014 [US1] Implement `load_data()` CSV path in `data.py`: read `data/sales-data.csv` with `pd.read_csv`, parse `date` column, raise `FileNotFoundError` with descriptive message if missing
-- [ ] T015 [US1] Implement `clean_data()` in `data.py`: drop rows where `total_amount`, `category`, or `region` is null or `total_amount` < 0; return `(cleaned_df, excluded_count)`
-- [ ] T016 [US1] Implement `compute_kpis()` in `data.py`: compute `total_sales`, `total_orders` (unique `order_id`), `avg_order_value`, `top_category`; return empty-safe dict when DataFrame is empty
-- [ ] T017 [US1] Render four KPI scorecards in `app.py` using `st.metric()` in a four-column layout: Total Sales ($), Total Orders, Average Order Value ($), Top Category
-- [ ] T018 [US1] Confirm T010–T012 PASS: run `uv run pytest tests/test_data.py -v` and verify all three tests show PASSED
+- [x] T014 [US1] Implement `load_data()` CSV path in `data.py`: read `data/sales-data.csv` with `pd.read_csv`, parse `date` column, raise `FileNotFoundError` with descriptive message if missing
+- [x] T015 [US1] Implement `clean_data()` in `data.py`: drop rows where `total_amount`, `category`, or `region` is null or `total_amount` < 0; return `(cleaned_df, excluded_count)`
+- [x] T016 [US1] Implement `compute_kpis()` in `data.py`: compute `total_sales`, `total_orders` (unique `order_id`), `avg_order_value`, `top_category`; return empty-safe dict when DataFrame is empty
+- [x] T017 [US1] Render four KPI scorecards in `app.py` using `st.metric()` in a four-column layout: Total Sales ($), Total Orders, Average Order Value ($), Top Category
+- [x] T018 [US1] Confirm T010–T012 PASS: run `uv run pytest tests/test_data.py -v` and verify all three tests show PASSED
 
 **Checkpoint**: US1 complete — KPI scorecards independently functional and tested
 

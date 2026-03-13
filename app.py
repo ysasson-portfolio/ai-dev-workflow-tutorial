@@ -20,7 +20,12 @@ st.title("ShopSmart Sales Dashboard")
 # ---------------------------------------------------------------------------
 # Data loading
 # ---------------------------------------------------------------------------
-# TODO T014 / T056: load and clean data; display error on failure
+try:
+    _raw_df = data.load_data(use_database=False, connection_url=None)
+    _df, _excluded = data.clean_data(_raw_df)
+except Exception as _e:
+    st.error(f"Failed to load data: {_e}")
+    st.stop()
 
 
 # ---------------------------------------------------------------------------
@@ -40,12 +45,18 @@ st.title("ShopSmart Sales Dashboard")
 # Filtered data
 # ---------------------------------------------------------------------------
 # TODO T049: call data.filter_data() with session_state values
+_filtered_df = _df
 
 
 # ---------------------------------------------------------------------------
 # KPI scorecards  (US1)
 # ---------------------------------------------------------------------------
-# TODO T017: render four st.metric() cards in a 4-column layout
+_kpis = data.compute_kpis(_filtered_df)
+_col1, _col2, _col3, _col4 = st.columns(4)
+_col1.metric("Total Sales", f"${_kpis['total_sales']:,.2f}")
+_col2.metric("Total Orders", f"{_kpis['total_orders']:,}")
+_col3.metric("Avg Order Value", f"${_kpis['avg_order_value']:,.2f}")
+_col4.metric("Top Category", _kpis["top_category"])
 
 
 # ---------------------------------------------------------------------------
