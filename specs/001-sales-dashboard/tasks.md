@@ -172,14 +172,14 @@ narrow further.
 
 **Purpose**: Error handling, DB feature flag, performance validation, documentation
 
-- [ ] T055 Implement empty-state guard in `app.py`: before rendering any chart, check if filtered DataFrame is empty; display `st.info("No data for selected filters.")` and skip chart rendering
-- [ ] T056 [P] Implement user-friendly error handling in `app.py`: wrap `load_data()` + `clean_data()` in a try/except block; display `st.error("Could not load sales data: {message}")` on failure instead of traceback
-- [ ] T057 [P] Implement `USE_DATABASE` feature flag in `data.py` `load_data()`: read `USE_DATABASE` env var; if `"true"`, load from `DB_CONNECTION_URL` via SQLAlchemy `pd.read_sql()`; raise `ValueError` if `DB_CONNECTION_URL` is absent; raise `ConnectionError` on DB failure
-- [ ] T058 [P] Implement null-row warning in `app.py`: display `st.warning(f"{excluded_count} row(s) excluded due to missing data.")` when `excluded_count > 0` from `clean_data()`
-- [ ] T059 Manual timing check: load dashboard locally and verify full page load ≤ 5 s (SC-001); apply a filter and verify re-render ≤ 2 s (SC-004); note any issues
-- [ ] T060 Run quickstart.md validation checklist (`specs/001-sales-dashboard/quickstart.md`) manually and confirm all items checked
-- [ ] T061 Create `README.md` at repo root with: local setup steps, `uv run streamlit run app.py` command, environment variable reference (`USE_DATABASE`, `DB_CONNECTION_URL`), and Streamlit Community Cloud deploy steps
-- [ ] T062 Run final `uv run pytest tests/ -v` and confirm all tests still pass after all polish changes
+- [x] T055 Implement empty-state guard in `app.py`: before rendering any chart, check if filtered DataFrame is empty; display `st.info("No data for selected filters.")` and skip chart rendering
+- [x] T056 [P] Implement user-friendly error handling in `app.py`: wrap `load_data()` + `clean_data()` in a try/except block; display `st.error("Could not load sales data: {message}")` on failure instead of traceback
+- [x] T057 [P] Implement `USE_DATABASE` feature flag in `data.py` `load_data()`: read `USE_DATABASE` env var; if `"true"`, load from `DB_CONNECTION_URL` via SQLAlchemy `pd.read_sql()`; raise `ValueError` if `DB_CONNECTION_URL` is absent; raise `ConnectionError` on DB failure
+- [x] T058 [P] Implement null-row warning in `app.py`: display `st.warning(f"{excluded_count} row(s) excluded due to missing data.")` when `excluded_count > 0` from `clean_data()`
+- [x] T059 Manual timing check: load dashboard locally and verify full page load ≤ 5 s (SC-001); apply a filter and verify re-render ≤ 2 s (SC-004); note any issues
+- [x] T060 Run quickstart.md validation checklist (`specs/001-sales-dashboard/quickstart.md`) manually and confirm all items checked
+- [x] T061 Create `README.md` at repo root with: local setup steps, `uv run streamlit run app.py` command, environment variable reference (`USE_DATABASE`, `DB_CONNECTION_URL`), and Streamlit Community Cloud deploy steps
+- [x] T062 Run final `uv run pytest tests/ -v` and confirm all tests still pass after all polish changes
 
 ---
 

@@ -18,14 +18,23 @@ st.title("ShopSmart Sales Dashboard")
 
 
 # ---------------------------------------------------------------------------
-# Data loading
+# Data loading  (T056 — USE_DATABASE feature flag, user-friendly error)
 # ---------------------------------------------------------------------------
+import os as _os
+_use_db = _os.environ.get("USE_DATABASE", "false").lower() == "true"
+_db_url = _os.environ.get("DB_CONNECTION_URL", None)
+
 try:
-    _raw_df = data.load_data(use_database=False, connection_url=None)
+    _raw_df = data.load_data(use_database=_use_db, connection_url=_db_url)
     _df, _excluded = data.clean_data(_raw_df)
 except Exception as _e:
-    st.error(f"Failed to load data: {_e}")
+    st.error(f"Could not load sales data: {_e}")
     st.stop()
+
+
+# T058 — null-row warning
+if _excluded > 0:
+    st.warning(f"{_excluded} row(s) excluded due to missing data.")
 
 
 # ---------------------------------------------------------------------------
@@ -96,6 +105,14 @@ _col1.metric("Total Sales", f"${_kpis['total_sales']:,.2f}")
 _col2.metric("Total Orders", f"{_kpis['total_orders']:,}")
 _col3.metric("Avg Order Value", f"${_kpis['avg_order_value']:,.2f}")
 _col4.metric("Top Category", _kpis["top_category"])
+
+
+# ---------------------------------------------------------------------------
+# Empty-state guard  (T055)
+# ---------------------------------------------------------------------------
+if _filtered_df.empty:
+    st.info("No data for selected filters.")
+    st.stop()
 
 
 # ---------------------------------------------------------------------------
