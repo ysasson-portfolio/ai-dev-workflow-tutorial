@@ -137,22 +137,22 @@ narrow further.
 
 ### Tests for User Story 4 (TDD — write first, confirm FAIL before implementing)
 
-- [ ] T039 [P] [US4] Write test `test_filter_data_date_range_inclusive` in `tests/test_data.py`: assert rows outside date range are excluded; boundary dates are included
-- [ ] T040 [P] [US4] Write test `test_filter_data_category_filter` in `tests/test_data.py`: assert only rows matching selected categories are returned
-- [ ] T041 [P] [US4] Write test `test_filter_data_region_filter` in `tests/test_data.py`: assert only rows matching selected regions are returned
-- [ ] T042 [P] [US4] Write test `test_filter_data_combined_filters` in `tests/test_data.py`: assert combined date + category + region filters apply correctly
-- [ ] T043 [P] [US4] Write test `test_filter_data_empty_result` in `tests/test_data.py`: assert empty DataFrame returned (not error) when no rows match filter
-- [ ] T044 [P] [US4] Write test `test_filter_data_invalid_date_range` in `tests/test_data.py`: assert `ValueError` raised when `date_start > date_end`
-- [ ] T045 [US4] Confirm T039–T044 FAIL: run `uv run pytest tests/test_data.py -v` and verify all six tests show FAILED
+- [x] T039 [P] [US4] Write test `test_filter_data_date_range_inclusive` in `tests/test_data.py`: assert rows outside date range are excluded; boundary dates are included
+- [x] T040 [P] [US4] Write test `test_filter_data_category_filter` in `tests/test_data.py`: assert only rows matching selected categories are returned
+- [x] T041 [P] [US4] Write test `test_filter_data_region_filter` in `tests/test_data.py`: assert only rows matching selected regions are returned
+- [x] T042 [P] [US4] Write test `test_filter_data_combined_filters` in `tests/test_data.py`: assert combined date + category + region filters apply correctly
+- [x] T043 [P] [US4] Write test `test_filter_data_empty_result` in `tests/test_data.py`: assert empty DataFrame returned (not error) when no rows match filter
+- [x] T044 [P] [US4] Write test `test_filter_data_invalid_date_range` in `tests/test_data.py`: assert `ValueError` raised when `date_start > date_end`
+- [x] T045 [US4] Confirm T039–T044 FAIL: run `uv run pytest tests/test_data.py -v` and verify all six tests show FAILED
 
 ### Implementation for User Story 4
 
-- [ ] T046 [US4] Implement `filter_data()` in `data.py`: filter by inclusive date range, category list, and region list; raise `ValueError` when `date_start > date_end`; return empty DataFrame (not error) when no rows match
-- [ ] T047 [US4] Initialise `st.session_state` defaults in `app.py` (at page top, before sidebar): `date_start`, `date_end` (from data min/max), `selected_categories` (all), `selected_regions` (all), `granularity` ("Monthly")
-- [ ] T048 [US4] Add sidebar filter controls to `app.py` using `st.sidebar`: `st.date_input` for date range, `st.multiselect` for categories, `st.multiselect` for regions; write selected values to `st.session_state`
-- [ ] T049 [US4] Refactor `app.py` to pass `st.session_state` filter values to `filter_data()` before all aggregation calls; confirm all chart and KPI sections use the filtered DataFrame
-- [ ] T050 [US4] Refactor granularity toggle in `app.py` to read/write `st.session_state.granularity` so filter state and granularity are consistent across re-renders
-- [ ] T051 [US4] Confirm T039–T044 PASS: run `uv run pytest tests/test_data.py -v`
+- [x] T046 [US4] Implement `filter_data()` in `data.py`: filter by inclusive date range, category list, and region list; raise `ValueError` when `date_start > date_end`; return empty DataFrame (not error) when no rows match
+- [x] T047 [US4] Initialise `st.session_state` defaults in `app.py` (at page top, before sidebar): `date_start`, `date_end` (from data min/max), `selected_categories` (all), `selected_regions` (all), `granularity` ("Monthly")
+- [x] T048 [US4] Add sidebar filter controls to `app.py` using `st.sidebar`: `st.date_input` for date range, `st.multiselect` for categories, `st.multiselect` for regions; write selected values to `st.session_state`
+- [x] T049 [US4] Refactor `app.py` to pass `st.session_state` filter values to `filter_data()` before all aggregation calls; confirm all chart and KPI sections use the filtered DataFrame
+- [x] T050 [US4] Refactor granularity toggle in `app.py` to read/write `st.session_state.granularity` so filter state and granularity are consistent across re-renders
+- [x] T051 [US4] Confirm T039–T044 PASS: run `uv run pytest tests/test_data.py -v`
 
 **Checkpoint**: US4 complete — all four user stories independently functional and tested
 

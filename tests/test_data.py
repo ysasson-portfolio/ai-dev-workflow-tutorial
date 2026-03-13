@@ -126,3 +126,92 @@ def test_aggregate_by_column_invalid_column(clean_df):
     """T031: aggregate_by_column() raises ValueError for unsupported column name."""
     with pytest.raises(ValueError):
         data.aggregate_by_column(clean_df, "product")
+
+
+# ---------------------------------------------------------------------------
+# US4 - Sidebar Filters (T039-T044)
+# ---------------------------------------------------------------------------
+# clean_df has dates Jan–May 2024, categories: Audio/Accessories/Wearables/Electronics,
+# regions: North/South/East/West
+
+def test_filter_data_date_range_inclusive(clean_df):
+    """T039: filter_data() includes boundary dates and excludes out-of-range rows."""
+    all_cats = list(clean_df["category"].unique())
+    all_regs = list(clean_df["region"].unique())
+    result = data.filter_data(
+        clean_df,
+        date_start=date(2024, 1, 1),
+        date_end=date(2024, 1, 31),
+        categories=all_cats,
+        regions=all_regs,
+    )
+    # Jan 2024: 2024-01-05, 2024-01-12 → 2 rows
+    assert len(result) == 2
+    assert all(date(2024, 1, 1) <= r <= date(2024, 1, 31) for r in result["date"])
+
+
+def test_filter_data_category_filter(clean_df):
+    """T040: filter_data() returns only rows matching selected categories."""
+    all_regs = list(clean_df["region"].unique())
+    result = data.filter_data(
+        clean_df,
+        date_start=date(2024, 1, 1),
+        date_end=date(2024, 12, 31),
+        categories=["Electronics"],
+        regions=all_regs,
+    )
+    assert len(result) == 4  # rows 5,6,7,8 in clean_df (Electronics)
+    assert (result["category"] == "Electronics").all()
+
+
+def test_filter_data_region_filter(clean_df):
+    """T041: filter_data() returns only rows matching selected regions."""
+    all_cats = list(clean_df["category"].unique())
+    result = data.filter_data(
+        clean_df,
+        date_start=date(2024, 1, 1),
+        date_end=date(2024, 12, 31),
+        categories=all_cats,
+        regions=["North"],
+    )
+    assert len(result) == 2  # 2024-01-05 (North) and 2024-03-07 (North)
+    assert (result["region"] == "North").all()
+
+
+def test_filter_data_combined_filters(clean_df):
+    """T042: filter_data() applies date + category + region filters together."""
+    result = data.filter_data(
+        clean_df,
+        date_start=date(2024, 1, 1),
+        date_end=date(2024, 3, 31),
+        categories=["Electronics"],
+        regions=["South"],
+    )
+    # Only row 2024-03-22 (Electronics, South) falls in Q1 + Electronics + South
+    assert len(result) == 1
+    assert result.iloc[0]["order_id"] == "ORD-006"
+
+
+def test_filter_data_empty_result(clean_df):
+    """T043: filter_data() returns empty DataFrame (not error) when no rows match."""
+    result = data.filter_data(
+        clean_df,
+        date_start=date(2024, 1, 1),
+        date_end=date(2024, 12, 31),
+        categories=["Furniture"],
+        regions=["North"],
+    )
+    assert len(result) == 0
+    assert list(result.columns) == list(clean_df.columns)
+
+
+def test_filter_data_invalid_date_range(clean_df):
+    """T044: filter_data() raises ValueError when date_start > date_end."""
+    with pytest.raises(ValueError):
+        data.filter_data(
+            clean_df,
+            date_start=date(2024, 12, 31),
+            date_end=date(2024, 1, 1),
+            categories=["Electronics"],
+            regions=["North"],
+        )

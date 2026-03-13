@@ -29,23 +29,62 @@ except Exception as _e:
 
 
 # ---------------------------------------------------------------------------
-# Session state initialisation
+# Session state initialisation  (T047)
 # ---------------------------------------------------------------------------
-# TODO T047: initialise st.session_state defaults
-# (date_start, date_end, selected_categories, selected_regions, granularity)
+_all_categories = sorted(_df["category"].unique().tolist())
+_all_regions = sorted(_df["region"].unique().tolist())
+_date_min = _df["date"].min() if hasattr(_df["date"].min(), "year") else pd.to_datetime(_df["date"]).dt.date.min()
+_date_max = _df["date"].max() if hasattr(_df["date"].max(), "year") else pd.to_datetime(_df["date"]).dt.date.max()
+
+if "date_start" not in st.session_state:
+    st.session_state.date_start = _date_min
+if "date_end" not in st.session_state:
+    st.session_state.date_end = _date_max
+if "selected_categories" not in st.session_state:
+    st.session_state.selected_categories = _all_categories
+if "selected_regions" not in st.session_state:
+    st.session_state.selected_regions = _all_regions
+if "granularity" not in st.session_state:
+    st.session_state.granularity = "Monthly"
 
 
 # ---------------------------------------------------------------------------
-# Sidebar filters
+# Sidebar filters  (T048)
 # ---------------------------------------------------------------------------
-# TODO T048: add st.sidebar controls (date_input, multiselect × 2)
+with st.sidebar:
+    st.header("Filters")
+    _date_range = st.date_input(
+        "Date Range",
+        value=(st.session_state.date_start, st.session_state.date_end),
+        min_value=_date_min,
+        max_value=_date_max,
+    )
+    if isinstance(_date_range, (list, tuple)) and len(_date_range) == 2:
+        st.session_state.date_start = _date_range[0]
+        st.session_state.date_end = _date_range[1]
+
+    st.session_state.selected_categories = st.multiselect(
+        "Categories",
+        options=_all_categories,
+        default=st.session_state.selected_categories,
+    )
+    st.session_state.selected_regions = st.multiselect(
+        "Regions",
+        options=_all_regions,
+        default=st.session_state.selected_regions,
+    )
 
 
 # ---------------------------------------------------------------------------
-# Filtered data
+# Filtered data  (T049)
 # ---------------------------------------------------------------------------
-# TODO T049: call data.filter_data() with session_state values
-_filtered_df = _df
+_filtered_df = data.filter_data(
+    _df,
+    date_start=st.session_state.date_start,
+    date_end=st.session_state.date_end,
+    categories=st.session_state.selected_categories or _all_categories,
+    regions=st.session_state.selected_regions or _all_regions,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -65,8 +104,14 @@ _col4.metric("Top Category", _kpis["top_category"])
 st.subheader("Sales Trend")
 # Using st.plotly_chart: build_trend_chart() returns a Plotly Figure because
 # st.line_chart does not support custom y-axis labels ("Sales ($)") natively.
-_granularity = st.radio("Granularity", ["Monthly", "Daily"], horizontal=True)
-_trend_df = data.aggregate_by_time(_filtered_df, _granularity)
+# T050: granularity reads/writes session_state for consistency across re-renders.
+st.session_state.granularity = st.radio(
+    "Granularity",
+    ["Monthly", "Daily"],
+    index=["Monthly", "Daily"].index(st.session_state.granularity),
+    horizontal=True,
+)
+_trend_df = data.aggregate_by_time(_filtered_df, st.session_state.granularity)
 st.plotly_chart(charts.build_trend_chart(_trend_df), use_container_width=True)
 
 

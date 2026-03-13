@@ -97,7 +97,16 @@ def filter_data(
     Raises:
         ValueError: If date_start > date_end.
     """
-    raise NotImplementedError
+    if date_start > date_end:
+        raise ValueError("date_start must be ≤ date_end")
+    dates = pd.to_datetime(df["date"]).dt.date
+    mask = (
+        (dates >= date_start)
+        & (dates <= date_end)
+        & (df["category"].isin(categories))
+        & (df["region"].isin(regions))
+    )
+    return df[mask].reset_index(drop=True)
 
 
 def compute_kpis(df: pd.DataFrame) -> dict:
