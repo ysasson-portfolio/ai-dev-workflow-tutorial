@@ -87,6 +87,54 @@ Reference materials: [Troubleshooting](v1/05-troubleshooting.md) · [Capstone Se
 
 Try to solve it yourself first. Google the error message, or if you have Claude Code installed, ask it. If you're still stuck, post in the Teams General channel.
 
+## ShopSmart Sales Dashboard — Developer Reference
+
+### Local setup
+
+```bash
+# 1. Install dependencies
+uv sync
+
+# 2. Run the dashboard (CSV mode — default)
+uv run streamlit run app.py
+```
+
+Open http://localhost:8501 in your browser.
+
+### Run tests
+
+```bash
+uv run pytest tests/ -v
+```
+
+All 25 tests should pass across `test_data`, `test_charts`, `test_integration`, and `test_smoke`.
+
+### Environment variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `USE_DATABASE` | `false` | Set to `true` to load from an external database instead of CSV |
+| `DB_CONNECTION_URL` | — | SQLAlchemy connection string (required when `USE_DATABASE=true`) |
+
+```bash
+# Example: run with a PostgreSQL database
+export USE_DATABASE=true
+export DB_CONNECTION_URL="postgresql://user:password@host:5432/dbname"
+uv run streamlit run app.py
+```
+
+### Deploy to Streamlit Community Cloud
+
+1. Push your branch to GitHub (repo must be public)
+2. Go to https://share.streamlit.io → **New app**
+3. Select your repo, branch, and set **Main file path** to `app.py`
+4. For database mode, add secrets under **Advanced settings → Secrets** (TOML format):
+   ```toml
+   USE_DATABASE = "true"
+   DB_CONNECTION_URL = "postgresql://..."
+   ```
+5. Click **Deploy**
+
 ## License
 
 This tutorial is provided for educational purposes.
