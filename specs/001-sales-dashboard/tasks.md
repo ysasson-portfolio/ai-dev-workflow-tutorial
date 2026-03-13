@@ -162,9 +162,9 @@ narrow further.
 
 **Purpose**: End-to-end pipeline validation and app import verification
 
-- [ ] T052 [P] Write integration test in `tests/test_integration.py`: run full pipeline `load_data()` → `clean_data()` → `filter_data()` → `compute_kpis()` with real `data/sales-data.csv`; assert Total Orders = 482 and Total Sales is within $650K–$700K
-- [ ] T053 [P] Write smoke test in `tests/test_smoke.py`: import `data` and `charts` modules; assert no import errors; verify all expected function names are present
-- [ ] T054 Run full pytest suite (`uv run pytest tests/ -v`) and confirm all tests pass across all four files
+- [x] T052 [P] Write integration test in `tests/test_integration.py`: run full pipeline `load_data()` → `clean_data()` → `filter_data()` → `compute_kpis()` with real `data/sales-data.csv`; assert Total Orders = 482 and Total Sales is within $650K–$700K
+- [x] T053 [P] Write smoke test in `tests/test_smoke.py`: import `data` and `charts` modules; assert no import errors; verify all expected function names are present
+- [x] T054 Run full pytest suite (`uv run pytest tests/ -v`) and confirm all tests pass across all four files
 
 ---
 
